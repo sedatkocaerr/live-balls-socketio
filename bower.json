@@ -1,0 +1,14 @@
+{
+  "name": "nodejs-live-balls",
+  "description": "",
+  "main": "",
+  "authors": [
+    "sedatkocaer <sedatkocaer3734@hotmail.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/sedatkocaer34/live-balls-socketio",
+  "dependencies": {
+    "angular": "^1.7.9",
+    "semantic": "^2.4.1"
+  }
+}
