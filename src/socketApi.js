@@ -18,16 +18,22 @@ io.on('connection',(socket)=>{
                 y:0
             }
         };
-
         const userData = Object.assign(data,defaultData);
         users[socket.id] = userData;
         socket.broadcast.emit('userConnectToRoom',userData);
-        socket.emit('playerdata',users)
+        socket.emit('playerdata',users);
     });
 
     socket.on('disconnect',()=>{
         socket.broadcast.emit("userDisconnectToRoom",users[socket.id]);
         delete users[socket.id];
+    });
+
+    socket.on('userchangeposition',(data)=>{
+
+        users[socket.id].position.x=data.position.x;
+        users[socket.id].position.y=data.position.y;
+        socket.broadcast.emit("userchangepositiondata",users[socket.id]);
     });
 });
 

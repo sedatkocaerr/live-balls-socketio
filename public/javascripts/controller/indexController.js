@@ -28,7 +28,10 @@ app.controller('indexController', ['$scope', 'indexFactory', ($scope, indexFacto
                         messagetext:"user is connect"
                     };
                     $scope.messages.push(messageData);
+                    $scope.players[data.id]=data;
                     $scope.$apply();
+
+
                 });
 
                 socket.on('playerdata',(players)=>{
@@ -44,7 +47,31 @@ app.controller('indexController', ['$scope', 'indexFactory', ($scope, indexFacto
                         messagetext:"user is disconnect"
                     };
                     $scope.messages.push(messageData);
+                    delete $scope.players[data.id];
                     $scope.$apply();
+                });
+
+                let animate=false;
+                $scope.onclickPlayer = ($event)=>{
+                    if (!animate)
+                        animate=true;
+                        const changedata ={
+                            id:socket.id,
+                            position:{
+                                x:$event.offsetX,
+                                y:$event.offsetY
+                            }
+                        };
+                        socket.emit('userchangeposition',changedata);
+                         $("#"+socket.id).animate({'left':$event.offsetX,'top':$event.offsetY},()=>{
+                            
+                            animate=false;
+                        });
+                    };
+
+                socket.on('userchangepositiondata',(data)=>{
+                     $("#"+data.id).animate({'left':data.position.x,'top':data.position.y},()=>{
+                    });
                 });
 
             }).catch((err) => {
@@ -52,5 +79,4 @@ app.controller('indexController', ['$scope', 'indexFactory', ($scope, indexFacto
             });
     }
 
-    
 }]);
