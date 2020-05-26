@@ -5,8 +5,10 @@ const socketApi = {};
 socketApi.io=io;
 
 const users ={};
+const messages=[];
 
-
+// helpers
+const randomColor = require("../helpers/randomcolor");
 io.on('connection',(socket)=>{
     console.log("user connected socket");
 
@@ -16,7 +18,8 @@ io.on('connection',(socket)=>{
             position:{
                 x:0,
                 y:0
-            }
+            },
+            color:randomColor()
         };
         const userData = Object.assign(data,defaultData);
         users[socket.id] = userData;
@@ -34,6 +37,12 @@ io.on('connection',(socket)=>{
         users[socket.id].position.x=data.position.x;
         users[socket.id].position.y=data.position.y;
         socket.broadcast.emit("userchangepositiondata",users[socket.id]);
+    });
+
+    socket.on('newMessageuser',(data)=>{
+        data.id=socket.id;
+        messages.push(data);
+        socket.broadcast.emit("messageuseradd",data);
     });
 });
 
